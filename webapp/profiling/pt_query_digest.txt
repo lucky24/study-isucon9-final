@@ -1,0 +1,645 @@
+
+# 1.7s user time, 70ms system time, 25.24M rss, 4.11G vsz
+# Current date: Tue Oct 22 14:50:11 2019
+# Hostname: Arakis-MBP
+# Files: logs/mysql/slow.log
+# Overall: 14.08k total, 41 unique, 167.60 QPS, 0.47x concurrency ________
+# Time range: 2019-10-22T05:46:39 to 2019-10-22T05:48:03
+# Attribute          total     min     max     avg     95%  stddev  median
+# ============     ======= ======= ======= ======= ======= ======= =======
+# Exec time            39s    12us   441ms     3ms     6ms    11ms   348us
+# Lock time             2s       0    38ms   123us   247us   418us    89us
+# Rows sent        238.08k       0     715   17.32   62.76   69.62    0.99
+# Rows examine      43.62M       0  68.62k   3.17k   3.88k  11.42k   18.53
+# Query size         2.17M       8     590  161.99  563.87  143.68  102.22
+
+# Profile
+# Rank Query ID                       Response time Calls R/Call V/M   Ite
+# ==== ============================== ============= ===== ====== ===== ===
+#    1 0x6719A68D7117E78A695B41010... 21.0011 53.4%   411 0.0511  0.03 SELECT train_master
+#    2 0x29D4B68468E377E4CAAEA492D...  3.2290  8.2%  1280 0.0025  0.00 SELECT seat_master
+#    3 0x539063CBE3F69541C549C0276...  2.5118  6.4%   840 0.0030  0.00 SELECT seat_reservations reservations seat_master station_master
+#    4 0x22A338C35B4352CE6778AAD57...  1.8004  4.6%   440 0.0041  0.00 SELECT seat_reservations reservations seat_master station_master
+#    5 0x04087FDBCD95C7DBB0BB0BC54...  1.4000  3.6%    23 0.0609  0.07 SELECT train_master
+#    6 0x02DDF00798ADDD9C5051645A8...  0.9727  2.5%   476 0.0020  0.00 SELECT seat_master
+#    7 0x34FFBA4ABDD1564C3505CEACD...  0.9200  2.3%   988 0.0009  0.00 SELECT distance_fare_master
+#    8 0x8FBEE5CF5ED5E65B762B69AA1...  0.8807  2.2%  2365 0.0004  0.00 SELECT seat_reservations reservations
+#    9 0xC94F0BDA5D59FB8CD16FB5F40...  0.7885  2.0%   324 0.0024  0.00 SELECT seat_master
+#   10 0xE478B6ED09421EDABF517FA8E...  0.5810  1.5%   988 0.0006  0.00 SELECT fare_master
+#   11 0x05CB5E668DE6400642E225DE6...  0.5250  1.3%  1772 0.0003  0.00 SELECT station_master
+#   12 0x6C2FF6114464A57248AC4127D...  0.4469  1.1%    94 0.0048  0.00 SELECT seat_master
+#   13 0x496326F87283930C3E366FACB...  0.4376  1.1%    52 0.0084  0.00 INSERT users
+#   14 0xA6B97F397663384EAFDD96799...  0.4103  1.0%    10 0.0410  0.00 SELECT train_master
+#   15 0xBAB8FAAA1F54E1DEF45677EF8...  0.3605  0.9%   151 0.0024  0.00 SELECT seat_master
+#   16 0xC1FACD3B581F7A73209E620A6...  0.3096  0.8%    56 0.0055  0.00 INSERT seat_reservations
+#   17 0x4CC48DEC08A5B875E572B4307...  0.3079  0.8%   748 0.0004  0.00 SELECT seat_reservations reservations
+#   18 0xA42B5E9EA1A59FB4BE3122450...  0.2978  0.8%   605 0.0005  0.00 SELECT train_timetable_master
+#   19 0x974CF3387753E44DDE1038D39...  0.2683  0.7%    88 0.0030  0.00 SELECT seat_master
+# MISC 0xMISC                          1.8765  4.8%  2367 0.0008   0.0 <22 ITEMS>
+
+# Query 1: 6.32 QPS, 0.32x concurrency, ID 0x6719A68D7117E78A695B410101D468B6 at byte 1523380
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.03
+# Time range: 2019-10-22T05:46:57 to 2019-10-22T05:48:02
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          2     411
+# Exec time     53     21s    35ms   441ms    51ms    87ms    37ms    42ms
+# Lock time      6   105ms    87us     3ms   255us   515us   258us   176us
+# Rows sent      0     411       1       1       1       1       0       1
+# Rows examine  63  27.54M  68.62k  68.62k  68.62k  68.62k       0  68.62k
+# Query size     1  40.67k      94     102  101.33   97.36    1.22   97.36
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms
+#  10ms  ################################################################
+# 100ms  ###
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'train_master'\G
+#    SHOW CREATE TABLE `train_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT * FROM train_master WHERE date='2020-01-01' AND train_class='遅いやつ' AND train_name='163'\G
+
+# Query 2: 19.69 QPS, 0.05x concurrency, ID 0x29D4B68468E377E4CAAEA492DF36ED47 at byte 1435527
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:46:57 to 2019-10-22T05:48:02
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          9    1280
+# Exec time      8      3s     2ms    15ms     3ms     4ms     1ms     2ms
+# Lock time      7   134ms    59us     2ms   104us   176us    76us    84us
+# Rows sent     73 174.06k       0     715  139.25  685.39  190.69   62.76
+# Rows examine  11   4.81M   3.85k   3.85k   3.85k   3.85k       0   3.85k
+# Query size     5 129.13k      99     106  103.31  102.22    2.34  102.22
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms  ################################################################
+#  10ms  #
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'seat_master'\G
+#    SHOW CREATE TABLE `seat_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT * FROM seat_master WHERE train_class='遅いやつ' AND seat_class='reserved' AND is_smoking_seat=0\G
+
+# Query 3: 12.92 QPS, 0.04x concurrency, ID 0x539063CBE3F69541C549C0276DD4E8B1 at byte 1103647
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:46:57 to 2019-10-22T05:48:02
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          5     840
+# Exec time      6      3s   346us    10ms     3ms     5ms     1ms     3ms
+# Lock time      8   148ms   130us   953us   176us   247us    60us   152us
+# Rows sent      2   6.17k       0      18    7.52   17.65    5.20    5.75
+# Rows examine   6   2.92M       0   4.01k   3.56k   3.88k   1.13k   3.88k
+# Query size    21 482.55k     587     590  588.26  563.87       0  563.87
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us  ######
+#   1ms  ################################################################
+#  10ms
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'seat_reservations'\G
+#    SHOW CREATE TABLE `seat_reservations`\G
+#    SHOW TABLE STATUS LIKE 'reservations'\G
+#    SHOW CREATE TABLE `reservations`\G
+#    SHOW TABLE STATUS LIKE 'seat_master'\G
+#    SHOW CREATE TABLE `seat_master`\G
+#    SHOW TABLE STATUS LIKE 'station_master'\G
+#    SHOW CREATE TABLE `station_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT sr.reservation_id, sr.car_number, sr.seat_row, sr.seat_column
+        FROM seat_reservations sr, reservations r, seat_master s, station_master std, station_master sta
+        WHERE
+            r.reservation_id=sr.reservation_id AND
+            s.train_class=r.train_class AND
+            s.car_number=sr.car_number AND
+            s.seat_column=sr.seat_column AND
+            s.seat_row=sr.seat_row AND
+            std.name=r.departure AND
+            sta.name=r.arrival
+         AND ((std.id <= 1 AND 1 < sta.id) OR (std.id <= 82 AND 82 < sta.id) OR (sta.id < 1 AND 82 < std.id))\G
+
+# Query 4: 9.17 QPS, 0.04x concurrency, ID 0x22A338C35B4352CE6778AAD5735E0CB9 at byte 2402411
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:47:05 to 2019-10-22T05:47:53
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          3     440
+# Exec time      4      2s     3ms    34ms     4ms     8ms     3ms     3ms
+# Lock time      5   102ms   131us     2ms   232us   541us   162us   167us
+# Rows sent      2   5.78k       4      22   13.45   21.45    5.57   11.95
+# Rows examine   3   1.69M   3.86k   3.99k   3.93k   3.88k   54.34   3.88k
+# Query size    11 253.28k     587     590  589.45  563.87       0  563.87
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms  ################################################################
+#  10ms  ##
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'seat_reservations'\G
+#    SHOW CREATE TABLE `seat_reservations`\G
+#    SHOW TABLE STATUS LIKE 'reservations'\G
+#    SHOW CREATE TABLE `reservations`\G
+#    SHOW TABLE STATUS LIKE 'seat_master'\G
+#    SHOW CREATE TABLE `seat_master`\G
+#    SHOW TABLE STATUS LIKE 'station_master'\G
+#    SHOW CREATE TABLE `station_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT sr.reservation_id, sr.car_number, sr.seat_row, sr.seat_column
+        FROM seat_reservations sr, reservations r, seat_master s, station_master std, station_master sta
+        WHERE
+            r.reservation_id=sr.reservation_id AND
+            s.train_class=r.train_class AND
+            s.car_number=sr.car_number AND
+            s.seat_column=sr.seat_column AND
+            s.seat_row=sr.seat_row AND
+            std.name=r.departure AND
+            sta.name=r.arrival
+         AND ((sta.id < 53 AND 53 <= std.id) OR (sta.id < 44 AND 44 <= std.id) OR (53 < sta.id AND std.id < 44))\G
+
+# Query 5: 0.36 QPS, 0.02x concurrency, ID 0x04087FDBCD95C7DBB0BB0BC54839A909 at byte 1713727
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.07
+# Time range: 2019-10-22T05:46:57 to 2019-10-22T05:48:01
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          0      23
+# Exec time      3      1s    40ms   382ms    61ms    56ms    67ms    44ms
+# Lock time      0     3ms    78us   368us   143us   287us    77us   108us
+# Rows sent      0     906      27      55   39.39   49.17    7.64   38.53
+# Rows examine   3   1.54M  68.62k  68.62k  68.62k  68.62k       0  68.62k
+# Query size     0   2.11k      91      97   94.13   92.72    2.21   92.72
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms
+#  10ms  ################################################################
+# 100ms  ##
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'train_master'\G
+#    SHOW CREATE TABLE `train_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT * FROM train_master WHERE date='2020-01-01' AND is_nobori=1 AND train_class='遅いやつ'\G
+
+# Query 6: 7.32 QPS, 0.01x concurrency, ID 0x02DDF00798ADDD9C5051645A82753AFA at byte 2159721
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:46:57 to 2019-10-22T05:48:02
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          3     476
+# Exec time      2   973ms     2ms    17ms     2ms     3ms     1ms     2ms
+# Lock time      2    42ms    57us   256us    87us   144us    30us    76us
+# Rows sent      0     448       0       1    0.94    0.99    0.23    0.99
+# Rows examine   4   1.79M   3.85k   3.85k   3.85k   3.69k       0   3.69k
+# Query size     2  52.12k     108     115  112.11  112.70    2.62  112.70
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms  ################################################################
+#  10ms  #
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'seat_master'\G
+#    SHOW CREATE TABLE `seat_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT * FROM seat_master WHERE train_class='最速' AND car_number=17 ORDER BY seat_row, seat_column LIMIT 1\G
+
+# Query 7: 15.20 QPS, 0.01x concurrency, ID 0x34FFBA4ABDD1564C3505CEACD14FFD6D at byte 1766683
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:46:57 to 2019-10-22T05:48:02
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          7     988
+# Exec time      2   920ms   146us    47ms   931us     4ms     2ms   224us
+# Lock time      8   154ms    53us    38ms   156us   176us     1ms    76us
+# Rows sent      4   9.65k      10      10      10      10       0      10
+# Rows examine   0  19.30k      20      20      20      20       0      20
+# Query size     2  61.75k      64      64      64      64       0      64
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us  ################################################################
+#   1ms  #################
+#  10ms  #
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'distance_fare_master'\G
+#    SHOW CREATE TABLE `distance_fare_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT distance,fare FROM distance_fare_master ORDER BY distance\G
+
+# Query 8: 36.38 QPS, 0.01x concurrency, ID 0x8FBEE5CF5ED5E65B762B69AA11BF45BB at byte 2033427
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:46:57 to 2019-10-22T05:48:02
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count         16    2365
+# Exec time      2   881ms   208us    11ms   372us   690us   383us   301us
+# Lock time     14   250ms    61us     2ms   105us   167us    65us    89us
+# Rows sent      0     327       0       2    0.14    0.99    0.38       0
+# Rows examine   0  31.65k       0      63   13.70   38.53   11.17   11.95
+# Query size    24 542.30k     230     239  234.81  234.30    4.50  234.30
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us  ################################################################
+#   1ms  #
+#  10ms  #
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'seat_reservations'\G
+#    SHOW CREATE TABLE `seat_reservations`\G
+#    SHOW TABLE STATUS LIKE 'reservations'\G
+#    SHOW CREATE TABLE `reservations`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT s.*
+                FROM seat_reservations s, reservations r
+                WHERE
+                    r.date='2020-01-01' AND r.train_class='遅いやつ' AND r.train_name='163' AND car_number=16 AND seat_row=1 AND seat_column='A'\G
+
+# Query 9: 4.98 QPS, 0.01x concurrency, ID 0xC94F0BDA5D59FB8CD16FB5F406A71530 at byte 1835840
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:46:57 to 2019-10-22T05:48:02
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          2     324
+# Exec time      2   788ms     2ms    38ms     2ms     4ms     2ms     2ms
+# Lock time      1    33ms    59us     1ms   101us   185us    91us    76us
+# Rows sent      8  20.81k      65     100   65.77   65.89    4.17   62.76
+# Rows examine   2   1.24M   3.91k   3.95k   3.91k   3.88k       0   3.88k
+# Query size     1  33.77k     100     107  106.74  102.22    0.88  102.22
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms  ################################################################
+#  10ms  #
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'seat_master'\G
+#    SHOW CREATE TABLE `seat_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT * FROM seat_master WHERE train_class='遅いやつ' AND car_number=16 ORDER BY seat_row, seat_column\G
+
+# Query 10: 15.20 QPS, 0.01x concurrency, ID 0xE478B6ED09421EDABF517FA8ECBD94B6 at byte 1826773
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:46:57 to 2019-10-22T05:48:02
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          7     988
+# Exec time      1   581ms   229us    12ms   588us     2ms   752us   332us
+# Lock time      7   139ms    73us    12ms   140us   224us   378us   103us
+# Rows sent      3   8.68k       9       9       9       9       0       9
+# Rows examine   0  86.84k      90      90      90      90       0      90
+# Query size     4  99.16k      97     108  102.78  107.34    4.54  102.22
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us  ################################################################
+#   1ms  ##########
+#  10ms  #
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'fare_master'\G
+#    SHOW CREATE TABLE `fare_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT * FROM fare_master WHERE train_class='遅いやつ' AND seat_class='premium' ORDER BY start_date\G
+
+# Query 11: 27.26 QPS, 0.01x concurrency, ID 0x05CB5E668DE6400642E225DE698CE579 at byte 4365889
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:46:57 to 2019-10-22T05:48:02
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count         12    1772
+# Exec time      1   525ms   130us     4ms   296us   568us   216us   247us
+# Lock time      9   167ms    47us     2ms    94us   176us    78us    76us
+# Rows sent      0   1.73k       1       1       1       1       0       1
+# Rows examine   0   1.73k       1       1       1       1       0       1
+# Query size     3  84.29k      48      54   48.71   49.17    1.20   46.83
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us  ################################################################
+#   1ms  #
+#  10ms
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'station_master'\G
+#    SHOW CREATE TABLE `station_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT * FROM station_master WHERE name='大阪'\G
+
+# Query 12: 1.45 QPS, 0.01x concurrency, ID 0x6C2FF6114464A57248AC4127D5F26679 at byte 1838269
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:46:58 to 2019-10-22T05:48:03
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          0      94
+# Exec time      1   447ms     2ms    40ms     5ms    11ms     5ms     3ms
+# Lock time      1    25ms    59us    14ms   267us   247us     1ms   113us
+# Rows sent      0      94       1       1       1       1       0       1
+# Rows examine   0 361.86k   3.85k   3.85k   3.85k   3.85k       0   3.85k
+# Query size     0   9.99k     104     111  108.86  107.34    2.20  107.34
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms  ################################################################
+#  10ms  #####
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'seat_master'\G
+#    SHOW CREATE TABLE `seat_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT * FROM seat_master WHERE train_class='遅いやつ' AND car_number=8 AND seat_column='A' AND seat_row=1\G
+
+# Query 13: 0.80 QPS, 0.01x concurrency, ID 0x496326F87283930C3E366FACB33DC5E7 at byte 1234
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:46:57 to 2019-10-22T05:48:02
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          0      52
+# Exec time      1   438ms     4ms    28ms     8ms    18ms     5ms     7ms
+# Lock time      1    25ms    77us    15ms   479us   445us     2ms   167us
+# Rows sent      0       0       0       0       0       0       0       0
+# Rows examine   0       0       0       0       0       0       0       0
+# Query size     0   9.13k     148     184  179.73  183.58   12.79  183.58
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms  ################################################################
+#  10ms  ###################
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'users'\G
+#    SHOW CREATE TABLE `users`\G
+INSERT INTO `users` (`email`, `salt`, `super_secure_password`) VALUES ('puser1@example.com', '', '$p5k2$64$ofqwdsKV$dn3TcqmaFKs4zN9vpc7pWDo.uFHJnzhM')\G
+
+# Query 14: 0.19 QPS, 0.01x concurrency, ID 0xA6B97F397663384EAFDD96799A6F2E10 at byte 1387799
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:47:00 to 2019-10-22T05:47:54
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          0      10
+# Exec time      1   410ms    37ms    48ms    41ms    44ms     3ms    42ms
+# Lock time      0     2ms    72us   301us   154us   287us    76us   138us
+# Rows sent      0     960      96      96      96      96       0      96
+# Rows examine   1 686.25k  68.62k  68.62k  68.62k  68.62k       0  68.62k
+# Query size     0     660      66      66      66      66       0      66
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms
+#  10ms  ################################################################
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'train_master'\G
+#    SHOW CREATE TABLE `train_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT * FROM train_master WHERE date='2020-01-06' AND is_nobori=1\G
+
+# Query 15: 2.36 QPS, 0.01x concurrency, ID 0xBAB8FAAA1F54E1DEF45677EF82580C7F at byte 4469377
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:46:58 to 2019-10-22T05:48:02
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          1     151
+# Exec time      0   361ms     2ms     5ms     2ms     4ms   622us     2ms
+# Lock time      0    14ms    60us   302us    93us   138us    30us    84us
+# Rows sent      0     146       0       1    0.97    0.99    0.18    0.99
+# Rows examine   1 581.29k   3.85k   3.85k   3.85k   3.85k       0   3.85k
+# Query size     0  19.83k     129     137  134.50  136.99    2.64  130.47
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms  ################################################################
+#  10ms
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'seat_master'\G
+#    SHOW CREATE TABLE `seat_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT * FROM seat_master WHERE train_class='最速' AND car_number=8 AND seat_column='B' AND seat_row=3 AND seat_class='premium'\G
+
+# Query 16: 0.86 QPS, 0.00x concurrency, ID 0xC1FACD3B581F7A73209E620A61356A01 at byte 838407
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:46:58 to 2019-10-22T05:48:03
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          0      56
+# Exec time      0   310ms     3ms    22ms     6ms    11ms     3ms     4ms
+# Lock time      0     7ms    73us   550us   126us   273us    79us    93us
+# Rows sent      0       0       0       0       0       0       0       0
+# Rows examine   0       0       0       0       0       0       0       0
+# Query size     0   6.23k     113     115  113.93  112.70       0  112.70
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms  ################################################################
+#  10ms  ############
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'seat_reservations'\G
+#    SHOW CREATE TABLE `seat_reservations`\G
+INSERT INTO `seat_reservations` (`reservation_id`, `car_number`, `seat_row`, `seat_column`) VALUES (6, 8, 1, 'B')\G
+
+# Query 17: 12.06 QPS, 0.00x concurrency, ID 0x4CC48DEC08A5B875E572B4307D2C512C at byte 4468172
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:47:00 to 2019-10-22T05:48:02
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          5     748
+# Exec time      0   308ms   225us     7ms   411us   799us   370us   332us
+# Lock time      5    90ms    81us     2ms   120us   194us    89us    98us
+# Rows sent      0     296       0      45    0.40       0    3.07       0
+# Rows examine   0  16.60k       0      63   22.73   62.76   19.10   14.52
+# Query size     6 139.93k     188     196  191.56  192.76       4  183.58
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us  ################################################################
+#   1ms  ##
+#  10ms
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'seat_reservations'\G
+#    SHOW CREATE TABLE `seat_reservations`\G
+#    SHOW TABLE STATUS LIKE 'reservations'\G
+#    SHOW CREATE TABLE `reservations`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT s.* FROM seat_reservations s, reservations r WHERE r.date='2020-01-01' AND r.train_class='最速' AND r.train_name='1' AND car_number=8 AND seat_row=17 AND seat_column='C' FOR UPDATE\G
+
+# Query 18: 9.17 QPS, 0.00x concurrency, ID 0xA42B5E9EA1A59FB4BE31224501F8AFAC at byte 1547417
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:46:57 to 2019-10-22T05:48:03
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          4     605
+# Exec time      0   298ms   196us    15ms   492us     1ms   696us   332us
+# Lock time      4    71ms    57us     2ms   116us   236us   114us    89us
+# Rows sent      0     605       1       1       1       1       0       1
+# Rows examine   0     605       1       1       1       1       0       1
+# Query size     3  83.11k     133     156  140.66  151.03    5.88  136.99
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us  ################################################################
+#   1ms  ####
+#  10ms  #
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'train_timetable_master'\G
+#    SHOW CREATE TABLE `train_timetable_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT departure FROM train_timetable_master WHERE date='2020-01-04' AND train_class='遅いやつ' AND train_name='17' AND station='奥山'\G
+
+# Query 19: 1.42 QPS, 0.00x concurrency, ID 0x974CF3387753E44DDE1038D3921D46BB at byte 1325534
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 0.00
+# Time range: 2019-10-22T05:47:00 to 2019-10-22T05:48:02
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          0      88
+# Exec time      0   268ms     2ms     7ms     3ms     5ms     1ms     2ms
+# Lock time      0    13ms    68us   536us   144us   260us    78us   113us
+# Rows sent      0     748       0      68    8.50   65.89   21.79       0
+# Rows examine   0 339.50k   3.85k   3.92k   3.86k   3.88k      34   3.69k
+# Query size     0  12.87k     147     153  149.73  151.03       3  143.84
+# String:
+# Hosts        webapp_webapp_1.webapp_default
+# Users        isutrain
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms  ################################################################
+#  10ms
+# 100ms
+#    1s
+#  10s+
+# Tables
+#    SHOW TABLE STATUS LIKE 'seat_master'\G
+#    SHOW CREATE TABLE `seat_master`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+SELECT * FROM seat_master WHERE train_class='最速' AND car_number=1 AND seat_class='premium' AND is_smoking_seat=0 ORDER BY seat_row, seat_column\G
